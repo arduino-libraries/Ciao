@@ -44,8 +44,6 @@ class CiaoClass {
   private:
 	bool use_CRC;
     void dropAll();
-
-  private:
     Stream &stream;
     bool started;
 	String ready="1";		//data ready status
