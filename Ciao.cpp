@@ -42,20 +42,21 @@ void CiaoClass::begin( bool CRC) {
 		delay(1000);
 	}while (stream.available() > 0);
 
-	stream.println("bridge;r;status");					//check the bridge python status	
+	stream.println("ciao;r;status");					//check the bridge python status	
 	String status = stream.readStringUntil(end_trasmit);
 	if(status == "1;running"){						
 		do{												//kill a istance of the bridge.py
-			stream.println("bridge;w;quit");
+			stream.println("ciao;w;quit");
 			stop = stream.readStringUntil(end_trasmit);
 			delay(3000);
 		}while(stop != "1;done");
     }
 	
 	do{ 
-		stream.print(F("run-bridge\n"));				//start bridge python
+		stream.print(F("run-ciao\n"));				//start bridge python
+		stream.readStringUntil(end_trasmit);
 		delay(3000);
-		stream.println("bridge;r;status");				//check if bridge python is running
+		stream.println("ciao;r;status");				//check if bridge python is running
 		start = stream.readStringUntil(end_trasmit);
 	}while (start != "1;running");
 	

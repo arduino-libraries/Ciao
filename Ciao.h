@@ -32,44 +32,41 @@
 
 
 class CiaoClass {
-  public:
-    CiaoClass(Stream &_stream);
-    void begin(bool);
-    CiaoData read(String);
-	String readUntil(String message, String split, int index=0);
-	void write( String protocol, String param1, String param2 = "", String param3 = "");
-	void writeResponse( String protocol, String id, String param1="", String param2 = "", String param3 = "");
-	CiaoData parse(String, String);
+	public:
+		CiaoClass(Stream &_stream);
+		void begin(bool);
+		CiaoData read(String);
+		String readUntil(String message, String split, int index=0);
+		void write( String protocol, String param1, String param2 = "", String param3 = "");
+		void writeResponse( String protocol, String id, String param1="", String param2 = "", String param3 = "");
+		CiaoData parse(String, String);
 
-  private:
-	bool use_CRC;
-    void dropAll();
-    Stream &stream;
-    bool started;
-	String ready="1";		//data ready status
-	char end_trasmit= (char)4;
+	private:
+		bool use_CRC;
+		void dropAll();
+		Stream &stream;
+		bool started;
+		String ready="1";		//data ready status
+		char end_trasmit= (char)4;
 };
 
 
 // This subclass uses a serial port Stream
 class SerialQiaoClass : public CiaoClass {
-  public:
-    SerialQiaoClass(HardwareSerial &_serial)
-      : CiaoClass(_serial), serial(_serial) {
-      // Empty
-	 }
-    void begin( bool CRC = false, unsigned long baudrate = 250000) {
-      serial.begin(baudrate);
-      CiaoClass::begin( CRC);
-    }
+	public:
+		SerialQiaoClass(HardwareSerial &_serial)
+			: CiaoClass(_serial), serial(_serial) {
+			// Empty
+		}
+		void begin( bool CRC = false, unsigned long baudrate = 250000) {
+			serial.begin(baudrate);
+			CiaoClass::begin( CRC);
+		}
 
-  private:
-    HardwareSerial &serial;
+	private:
+		HardwareSerial &serial;
 };
 
 extern SerialQiaoClass Ciao;
 
 #endif /* BRIDGE_H_ */
-/*
-#include <Console.h>
-#include <Process.h>*/
