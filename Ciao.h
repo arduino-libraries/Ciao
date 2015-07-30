@@ -34,7 +34,7 @@
 class CiaoClass {
 	public:
 		CiaoClass(Stream &_stream);
-		void begin(bool);
+		void begin();
 		CiaoData read(String);
 		String readUntil(String message, String split, int index=0);
 		void write( String protocol, String param1, String param2 = "", String param3 = "");
@@ -42,31 +42,28 @@ class CiaoClass {
 		CiaoData parse(String, String);
 
 	private:
-		bool use_CRC;
 		void dropAll();
 		Stream &stream;
 		bool started;
-		String ready="1";		//data ready status
-		char end_trasmit= (char)4;
 };
 
 
 // This subclass uses a serial port Stream
-class SerialQiaoClass : public CiaoClass {
+class SerialCiaoClass : public CiaoClass {
 	public:
-		SerialQiaoClass(HardwareSerial &_serial)
+		SerialCiaoClass(HardwareSerial &_serial)
 			: CiaoClass(_serial), serial(_serial) {
 			// Empty
 		}
-		void begin( bool CRC = false, unsigned long baudrate = 250000) {
+		void begin( unsigned long baudrate = 250000) {
 			serial.begin(baudrate);
-			CiaoClass::begin( CRC);
+			CiaoClass::begin();
 		}
 
 	private:
 		HardwareSerial &serial;
 };
 
-extern SerialQiaoClass Ciao;
+extern SerialCiaoClass Ciao;
 
 #endif /* BRIDGE_H_ */

@@ -5,7 +5,7 @@
 * File : Ciao.cpp
 * Date : 2015/07/03
 * Revision : 0.0.1 $
-*
+* 
 ****************************************************************************
 
   This library is free software; you can redistribute it and/or
@@ -30,9 +30,8 @@ CiaoClass::CiaoClass(Stream &_stream) :
   // Empty
 }
 
-void CiaoClass::begin( bool CRC) {
+void CiaoClass::begin() {
 	
-	use_CRC = CRC;  //CRC flag
 	String start;
 	String stop;
 
@@ -43,30 +42,30 @@ void CiaoClass::begin( bool CRC) {
 	}while (stream.available() > 0);
 
 	stream.println("ciao;r;status");					//check the bridge python status	
-	String status = stream.readStringUntil(end_trasmit);
+	String status = stream.readStringUntil(END_TX_CHAR);
 	if(status == "1;running"){						
 		do{												//kill a istance of the bridge.py
 			stream.println("ciao;w;quit");
-			stop = stream.readStringUntil(end_trasmit);
+			stop = stream.readStringUntil(END_TX_CHAR);
 			delay(3000);
 		}while(stop != "1;done");
     }
 	
 	do{ 
 		stream.print(F("run-ciao\n"));				//start bridge python
-		stream.readStringUntil(end_trasmit);
+		stream.readStringUntil(END_TX_CHAR);
 		delay(3000);
 		stream.println("ciao;r;status");				//check if bridge python is running
-		start = stream.readStringUntil(end_trasmit);
+		start = stream.readStringUntil(END_TX_CHAR);
 	}while (start != "1;running");
 	
 }
 
 CiaoData CiaoClass::read( String connector) {
-
+	
 	CiaoData data;
 	stream.println(connector + ";r");					// send read request 
-	String message = stream.readStringUntil(end_trasmit);
+	String message = stream.readStringUntil(END_TX_CHAR);
 	data = parse(message, ";");
 	return data;
 }
@@ -74,14 +73,20 @@ CiaoData CiaoClass::read( String connector) {
 void CiaoClass::write(String connector, String param1, String param2 , String param3 ) {
 
 	CiaoData data;
-	if (param1 != "")									//serialize the parameter to be transmit
-		data.serialize(param1);
-	if (param2 != "")
-		data.serialize(param2);
-	if (param3 != "")
-		data.serialize(param3);
-	stream.println(connector + ";w;" + data.message()); 
-	String mess_receive = stream.readStringUntil(end_trasmit);
+	if (param1 != ""){
+		stream.print(connector+";w;");
+		stream.print(param1);
+	}
+	if (param2 != ""){
+		stream.print(DATA_SPLIT_CHAR);
+		stream.print(param2);
+	}
+	if (param3 != ""){
+		stream.print(DATA_SPLIT_CHAR);
+		stream.print(param3);
+	}
+	stream.println();
+	String mess_receive = stream.readStringUntil(END_TX_CHAR);
 	data = parse(mess_receive, ";");
 	
 }
@@ -89,15 +94,22 @@ void CiaoClass::write(String connector, String param1, String param2 , String pa
 void CiaoClass::writeResponse( String connector, String id, String param1, String param2 , String param3) {
 
 	CiaoData data;
-	if (param1 != "")
-		data.serialize(param1);
-	if (param2 != "")
-		data.serialize(param2);
-	if (param3 != "")
-		data.serialize(param3);
-	if(data.check_id(id)){
-		stream.println(connector + ";wr;"+ id +";"+ data.message());
-		String mess_receive = stream.readStringUntil(end_trasmit);
+	if(id.length()> ID_SIZE_TX){
+		if (param1 != ""){
+			stream.print(connector+";wr;");
+			stream.print(id+";");
+			stream.print(param1);
+		}
+		if (param2 != ""){
+			stream.print(DATA_SPLIT_CHAR);
+			stream.print(param2);
+		}
+		if (param3 != ""){
+			stream.print(DATA_SPLIT_CHAR);
+			stream.print(param3);
+		}
+		stream.println();
+		String mess_receive = stream.readStringUntil(END_TX_CHAR);
 		data = parse(mess_receive, ";");
 	}
 }
@@ -109,7 +121,7 @@ CiaoData CiaoClass::parse(String message, String split){
 	int messIndex = message.indexOf(split, statusIndex+1);
 	status = message.substring(0, statusIndex);				//message status (0: no message; 1:data ready; -1:error)
 
-	if(status == ready && message.substring(statusIndex+1, messIndex) != "done"){
+	if(status == ID_READY && message.substring(statusIndex+1, messIndex) != "done"){
 		data.msg_split[0]=message.substring(statusIndex+1, messIndex);
 		data.parseMessage(message.substring(messIndex+1));	//parsing data received
 	}
@@ -129,7 +141,7 @@ void CiaoClass::dropAll() {
 // Ciao instance
 #ifdef __AVR_ATmega32U4__
 // Leonardo variants (where HardwareSerial is Serial1)
-SerialQiaoClass Ciao(Serial1);
+SerialCiaoClass Ciao(Serial1);
 #else
-SerialQiaoClass Ciao(Serial);
+SerialCiaoClass Ciao(Serial);
 #endif
