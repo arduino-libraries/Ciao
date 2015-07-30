@@ -25,25 +25,22 @@
 
 #include <Arduino.h>
 
+#define ID_ERROR		String(-1)
+#define ID_EMPTY		String(0)
+#define ID_READY		String(1)
+#define END_TX_CHAR 	(char)4
+#define DATA_SPLIT_CHAR (char)30
+#define ID_SIZE_TX		25
+
 class CiaoData {
 	public:
-		CiaoData(){
-			serial_command="";
-		}
 		
 		String get(int index){
 			return msg_split[index];
 		}
-
-		void serialize(String param){
-			if (serial_command == "")
-				serial_command = param ;
-			else
-				serial_command = serial_command + String(data_separator) + param ;	
-		}
 		
 		void split_command(String command, String split){		//fuction to split the digital/analog command (ex: digital/13/1)
-			if(check_command(command,split)){		//if command is empty don't running the split
+			if(command.indexOf(split) != -1){		//if command is empty don't running the split
 				int statusIndex = command.indexOf(split);
 				int messIndex = command.indexOf(split, statusIndex+1);
 				msg_split[0] = command.substring(0, statusIndex);
@@ -55,33 +52,25 @@ class CiaoData {
 			}
 		}
 		
-		String message(void){		
-			return serial_command;		
-		}
-		
 		void parseMessage(String command){
-			int statusIndex = command.indexOf(data_separator);
+			int statusIndex = command.indexOf(DATA_SPLIT_CHAR);
 			msg_split[1] = command.substring(0, statusIndex);
 			msg_split[2] = command.substring(statusIndex+1);
 		}
   
-		bool check_id(String id){		//check if the id is valid
-			if(id.length()> 20)
+		bool isError(){		//check for an error in data received
+			if(get(0) == ID_ERROR)
+				return true;
+			else
+				return false;			
+		}
+		
+		bool isEmpty(){		//check if data received is empty
+			if(get(0) == ID_EMPTY)
 				return true;
 			else
 				return false;	
 		}
-		
-		bool check_command(String command, String split){	
-			if(command.indexOf(split) == -1)
-				return false;
-			else
-				return true;	
-		}
-		
-	private:
-		String serial_command;
-		char data_separator= (char)30;	
 		
 	public:
 		String msg_split[3];
