@@ -28,8 +28,8 @@
 #define ID_ERROR		String(-1)
 #define ID_EMPTY		String(0)
 #define ID_READY		String(1)
-#define END_TX_CHAR 	(char)4
-#define DATA_SPLIT_CHAR (char)30
+#define END_TX_CHAR		(char)4
+#define DATA_SPLIT_CHAR	(char)30
 #define ID_SIZE_TX		25
 
 class CiaoData {
@@ -37,19 +37,6 @@ class CiaoData {
 		
 		String get(int index){
 			return msg_split[index];
-		}
-		
-		void split_command(String command, String split){		//fuction to split the digital/analog command (ex: digital/13/1)
-			if(command.indexOf(split) != -1){		//if command is empty don't running the split
-				int statusIndex = command.indexOf(split);
-				int messIndex = command.indexOf(split, statusIndex+1);
-				msg_split[0] = command.substring(0, statusIndex);
-				msg_split[1] = command.substring(statusIndex+1, messIndex);
-				if(messIndex != -1)
-					msg_split[2] = command.substring(messIndex+1);
-				else
-					msg_split[2]="-1";
-			}
 		}
 		
 		void parseMessage(String command){

@@ -50,7 +50,6 @@ void CiaoClass::begin() {
 			delay(3000);
 		}while(stop != "1;done");
     }
-	
 	do{ 
 		stream.print(F("run-ciao\n"));				//start bridge python
 		stream.readStringUntil(END_TX_CHAR);
@@ -58,7 +57,6 @@ void CiaoClass::begin() {
 		stream.println("ciao;r;status");				//check if bridge python is running
 		start = stream.readStringUntil(END_TX_CHAR);
 	}while (start != "1;running");
-	
 }
 
 CiaoData CiaoClass::read( String connector) {
@@ -136,6 +134,24 @@ void CiaoClass::dropAll() {
   while (stream.available() > 0) {
     stream.read();
   }
+}
+
+//fuction to split command (ex: digital/13/1)
+void splitString(String command, String split, String msg[], int size){		
+	  
+	for(int a=0;a< size ;a++)		//initialize array element to -1
+		msg[a]= ID_ERROR;
+	char buf[command.length()+1];
+	command.toCharArray(buf, command.length()+1);
+	char* array;
+	const char splt[1]= {split.charAt(0)};
+	int i=0;
+	array = strtok (buf,splt);
+	while (array != NULL){  
+		msg[i]=String(array);
+		array = strtok (NULL, splt);
+		i++; 
+	}
 }
 
 // Ciao instance

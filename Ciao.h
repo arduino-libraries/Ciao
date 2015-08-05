@@ -30,13 +30,11 @@
 #include <CiaoData.h>
 #include <Stream.h>
 
-
 class CiaoClass {
 	public:
 		CiaoClass(Stream &_stream);
 		void begin();
 		CiaoData read(String);
-		String readUntil(String message, String split, int index=0);
 		void write( String protocol, String param1, String param2 = "", String param3 = "");
 		void writeResponse( String protocol, String id, String param1="", String param2 = "", String param3 = "");
 		CiaoData parse(String, String);
@@ -46,7 +44,6 @@ class CiaoClass {
 		Stream &stream;
 		bool started;
 };
-
 
 // This subclass uses a serial port Stream
 class SerialCiaoClass : public CiaoClass {
@@ -63,6 +60,8 @@ class SerialCiaoClass : public CiaoClass {
 	private:
 		HardwareSerial &serial;
 };
+
+void splitString(String, String, String[], int size);
 
 extern SerialCiaoClass Ciao;
 
