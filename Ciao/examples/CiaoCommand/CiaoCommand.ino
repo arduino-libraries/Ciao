@@ -1,5 +1,7 @@
 /*
 
+ This sketch use the xmpp connector to receive command for the MCU from a xmpp client.
+
  Possible commands to send from the xmpp client:
 
  * "digital/PIN"        -> to read a digital PIN
@@ -12,13 +14,15 @@
  * "led off"            -> turn off led 13
  * "ciao"               -> random answers in 5 different languages
  
+ created September 2015
+ by andrea[at]arduino[dot]org
+ 
  */
+ 
 #include <Ciao.h>
 #include <Servo.h>
 
 Servo servo;
-
-String mess_random[5]={"Hi, I am MCU :-P","hallo , ik ben MCU :-P","bonjour, je suis MCU :-P","Ciao, io sono MCU :-P","Kon'nichiwa, watashi wa MCU yo :-P" };
 
 void setup() {
 
@@ -34,10 +38,8 @@ void loop() {
     String message = data.get(2);
     
     message.toLowerCase();
-    if(message == "ciao")
-      Ciao.writeResponse("xmpp",id,mess_random[random(0,5)]);
     
-    else if(message == "led on"){
+    if(message == "led on"){
       digitalWrite(13,HIGH);
       Ciao.writeResponse("xmpp",id,"Led D13 ON");
     }
