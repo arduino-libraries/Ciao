@@ -1,6 +1,6 @@
 /*
 
- This sketch use the xmpp connector to receive command for the MCU from a xmpp client.
+ This sketch uses the xmpp connector to receive command for the MCU from a xmpp client.
 
  Possible commands to send from the xmpp client:
 
@@ -14,6 +14,9 @@
  * "led off"            -> turn off led 13
  * "ciao"               -> random answers in 5 different languages
  
+ NOTE: be sure to activate and configure xmpp connector on Linino OS
+       http://labs.arduino.org/Ciao
+   
  created September 2015
  by andrea[at]arduino[dot]org
  
@@ -37,19 +40,20 @@ void loop() {
     String sender = data.get(1);
     String message = data.get(2);
     
-    message.toLowerCase();
+    message.toUpperCase();
     
-    if(message == "led on"){
+    if(message == "LED ON"){
       digitalWrite(13,HIGH);
       Ciao.writeResponse("xmpp",id,"Led D13 ON");
     }
     
-    else if(message == "led off"){
+    else if(message == "LED OFF"){
       digitalWrite(13,LOW);
       Ciao.writeResponse("xmpp",id,"Led D13 OFF");     
     }       
     else{
-      String command[3];        
+      String command[3];
+          
       splitString(message,"/",command,3);
       execute(command,id);
     }
@@ -58,16 +62,16 @@ void loop() {
 
 void execute(String cmd[], String id) {
 
-  if (cmd[0] == "digital") {
+  if (cmd[0] == "DIGITAL") {
     digitalCommand(cmd,id);
   }
-  else if (cmd[0] == "analog") {
+  else if (cmd[0] == "ANALOG") {
     analogCommand(cmd,id);
   }
-  else if (cmd[0] == "servo") {
+  else if (cmd[0] == "SERVO") {
     servoCommand(cmd,id);
   }
-  else if (cmd[0] == "mode") {
+  else if (cmd[0] == "MODE") {
     setMode(cmd,id);
   }
   else
@@ -133,13 +137,13 @@ void setMode(String cmd[], String id) {
 
   pin = (cmd[1]).toInt();
   
-  if (cmd[2] == "input") {
+  if (cmd[2] == "INPUT") {
     pinMode(pin, INPUT);
     Ciao.writeResponse("xmpp",id," pin D"+String(pin)+" set in INPUT mode");
     return;
   }
 
-  if (cmd[2] == "output") {
+  if (cmd[2] == "OUTPUT") {
     pinMode(pin, OUTPUT);
     Ciao.writeResponse("xmpp",id," pin D"+String(pin)+" set in OUTPUT mode");
     return;

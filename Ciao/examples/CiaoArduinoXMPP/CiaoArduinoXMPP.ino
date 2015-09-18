@@ -1,17 +1,20 @@
 /*
   Arduino Ciao example
   
- Remember to set the xmpp client in the "USER" field used to receive the response by MCU.
-
- This sketch use the xmpp connector
+ This sketch uses ciao xmpp connector. It sends back “hello world” message to the xmpp client when receives “ciao” from it. 
+  
+ Be sure to set the xmpp client in the "USER" field used to receive the response by MCU.
 
  Possible commands to send from the xmpp client:
-
  * "ciao"               -> random answers in 5 different languages
  
  created September 2015
  by andrea[at]arduino[dot]org
  
+ 
+  NOTE: be sure to activate and configure xmpp connector on Linino OS
+       http://labs.arduino.org/Ciao
+   
  */
  
 #include <Ciao.h>
