@@ -33,6 +33,7 @@
 #define DATA_SPLIT_CHAR	(char)30
 #define ID_SIZE_TX		25
 
+#if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
 class CiaoData {
 	public:
 		
@@ -62,7 +63,20 @@ class CiaoData {
 		
 	public:
 		String msg_split[3];
-		
 };
 
+#elif defined(__AVR_ATmega328P__)
+
+class CiaoData {
+	public:
+
+		char* get(int index){
+			return msg_split[index];
+		}
+		
+	public:
+		char* msg_split[3];
+};
+
+#endif
 
