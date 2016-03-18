@@ -24,13 +24,14 @@
 */
 
 #include "Ciao.h"
+#include "Wifi.h"
 
 #if defined(__AVR_ATmega328P__)
 
 #include <stdarg.h>
 #include <stdio.h>
 
-SC16IS750 espSerial = SC16IS750(SC16IS750_PROTOCOL_I2C,SC16IS750_ADDRESS_AA);
+WifiData espSerial = WifiData(SC16IS750_PROTOCOL_I2C,SC16IS750_ADDRESS_AA);
 ESP esp(&espSerial, 4);
 REST rest(&esp);
 
@@ -62,11 +63,27 @@ void WifiClass::powerON(){
 void WifiClass::powerOFF(){ 	
 	
 }
+
+WifiData WifiClass::stream(){
+	return espSerial;
+}
+int WifiClass::read(){
+	return espSerial.read();
+}
 void WifiClass::print(String str){
 	espSerial.print(str);
 }
 void WifiClass::println(String str){
 	espSerial.println(str);
+}
+void CiaoClass::print(String str){
+	espSerial.print(str);
+}
+void CiaoClass::println(String str){
+	espSerial.println(str);
+}
+boolean WifiClass::available(){
+	return espSerial.available();
 }
 void WifiClass::connect(char* ssid,char* pwd){
 	esp.wifiConnect(ssid, pwd);
@@ -74,8 +91,8 @@ void WifiClass::connect(char* ssid,char* pwd){
 boolean WifiClass::connected(){
 	return wifiConnected;
 }
-void WifiClass::begin() {
-	
+
+void WifiBegin() {
 	Serial.begin(9600);
 	espSerial.begin(9600);
 	if(espSerial.ping()!=1) {
@@ -94,20 +111,27 @@ void WifiClass::begin() {
 	esp.wifiCb.attach(&wifiCb);
 	espSerial.println("\nDBG: UnoWiFi Start");
 }
+void WifiClass::begin() {
+	WifiBegin();
+}
 void CiaoClass::begin() {
+
+	WifiBegin();
 	espSerial.println("DBG: Ciao start");
 	rest.begin("google.com");
 	rest.get("/");
-	delay(2000);
+	delay(3000);
 }
 
-CiaoData responseREAD(String buff){
+CiaoData responseREAD(){
 	CiaoData data;
 	delay(400);
 	char response[64] = "";
 	char cstr[8] = "";
 
 	int ret = rest.getResponse(response, 64);
+	//espSerial.println(ret);
+
 	snprintf(cstr,8,"%d",ret);
 
 		data.msg_split[0]="id";
@@ -116,22 +140,21 @@ CiaoData responseREAD(String buff){
 				
 	return data;
 }
-
 CiaoData requestPOST(char* hostname, String stringone){
 	rest.begin(hostname);
 	//delay(1000);	fix
-	//esp.process(); fix
+	//esp.process(); 
 	rest.post((const char*) stringone.c_str(),0);
-	return responseREAD(stringone); 
+	return responseREAD(); 
 }
 
 CiaoData requestGET(char* hostname, String stringone){
 
 	rest.begin(hostname);
 	//delay(1000);   fix
-	//esp.process(); fix
+	//esp.process(); 
 	rest.get((const char*) stringone.c_str());
-	return responseREAD(stringone); 
+	return responseREAD(); 
 }
 
 CiaoData PassThroughM(char* connector,char* hostname, String stringone, char* method){

@@ -26,7 +26,8 @@ Please keep the above information when you use this code in your project.
 
 #define WIRE Wire
 
-SC16IS750::SC16IS750(uint8_t prtcl, uint8_t addr_sspin)
+
+WifiData::WifiData(uint8_t prtcl, uint8_t addr_sspin)
 {
     protocol = prtcl;
     if ( protocol == SC16IS750_PROTOCOL_I2C ) {
@@ -37,9 +38,11 @@ SC16IS750::SC16IS750(uint8_t prtcl, uint8_t addr_sspin)
     peek_flag = 0;
 }
 
-void SC16IS750::begin(uint32_t baud)
+void WifiData::begin(uint32_t baud)
 {
+    //Serial.println("1111111111111111");
     if ( protocol == SC16IS750_PROTOCOL_I2C) {
+    //Serial.println("22222222222222");
         WIRE.begin();
     } 
     ResetDevice();
@@ -48,12 +51,12 @@ void SC16IS750::begin(uint32_t baud)
     SetLine(8,0,1);
 }
 
-int SC16IS750::available(void)
+int WifiData::available(void)
 {
     return FIFOAvailableData();
 }
 
-int SC16IS750::read(void)
+int WifiData::read(void)
 {
     if ( peek_flag == 0) {
         return ReadByte();
@@ -63,28 +66,28 @@ int SC16IS750::read(void)
     }
 }
 
-size_t SC16IS750::write(uint8_t val)
+size_t WifiData::write(uint8_t val)
 {
     WriteByte(val);
 }
 
-void SC16IS750::pinMode(uint8_t pin, uint8_t i_o)
+void WifiData::pinMode(uint8_t pin, uint8_t i_o)
 {
     GPIOSetPinMode(pin, i_o);
 }
 
-void SC16IS750::digitalWrite(uint8_t pin, uint8_t value)
+void WifiData::digitalWrite(uint8_t pin, uint8_t value)
 {
     GPIOSetPinState(pin, value);
 }
 
-uint8_t SC16IS750::digitalRead(uint8_t pin)
+uint8_t WifiData::digitalRead(uint8_t pin)
 {
    return GPIOGetPinState(pin);
 }
 
 
-uint8_t SC16IS750::ReadRegister(uint8_t reg_addr)
+uint8_t WifiData::ReadRegister(uint8_t reg_addr)
 {
     uint8_t result;
     if ( protocol == SC16IS750_PROTOCOL_I2C ) {  // register read operation via I2C
@@ -100,7 +103,7 @@ uint8_t SC16IS750::ReadRegister(uint8_t reg_addr)
 
 }
 
-void SC16IS750::WriteRegister(uint8_t reg_addr, uint8_t val)
+void WifiData::WriteRegister(uint8_t reg_addr, uint8_t val)
 {
     if ( protocol == SC16IS750_PROTOCOL_I2C ) {  // register read operation via I2C
         WIRE.beginTransmission(device_address_sspin);
@@ -113,7 +116,7 @@ void SC16IS750::WriteRegister(uint8_t reg_addr, uint8_t val)
     return ;
 }
 
-int16_t SC16IS750::SetBaudrate(uint32_t baudrate) //return error of baudrate parts per thousand
+int16_t WifiData::SetBaudrate(uint32_t baudrate) //return error of baudrate parts per thousand
 {
     uint16_t divisor;
     uint8_t prescaler;
@@ -146,7 +149,7 @@ int16_t SC16IS750::SetBaudrate(uint32_t baudrate) //return error of baudrate par
 
 }
 
-void SC16IS750::SetLine(uint8_t data_length, uint8_t parity_select, uint8_t stop_length )
+void WifiData::SetLine(uint8_t data_length, uint8_t parity_select, uint8_t stop_length )
 {
     uint8_t temp_lcr;
     temp_lcr = ReadRegister(SC16IS750_REG_LCR);
@@ -194,7 +197,7 @@ void SC16IS750::SetLine(uint8_t data_length, uint8_t parity_select, uint8_t stop
     WriteRegister(SC16IS750_REG_LCR,temp_lcr);
 }
 
-void SC16IS750::GPIOSetPinMode(uint8_t pin_number, uint8_t i_o)
+void WifiData::GPIOSetPinMode(uint8_t pin_number, uint8_t i_o)
 {
     uint8_t temp_iodir;
 
@@ -209,7 +212,7 @@ void SC16IS750::GPIOSetPinMode(uint8_t pin_number, uint8_t i_o)
     return;
 }
 
-void SC16IS750::GPIOSetPinState(uint8_t pin_number, uint8_t pin_state)
+void WifiData::GPIOSetPinState(uint8_t pin_number, uint8_t pin_state)
 {
     uint8_t temp_iostate;
 
@@ -225,7 +228,7 @@ void SC16IS750::GPIOSetPinState(uint8_t pin_number, uint8_t pin_state)
 }
 
 
-uint8_t SC16IS750::GPIOGetPinState(uint8_t pin_number)
+uint8_t WifiData::GPIOGetPinState(uint8_t pin_number)
 {
     uint8_t temp_iostate;
 
@@ -236,32 +239,32 @@ uint8_t SC16IS750::GPIOGetPinState(uint8_t pin_number)
     return 1;
 }
 
-uint8_t SC16IS750::GPIOGetPortState(void)
+uint8_t WifiData::GPIOGetPortState(void)
 {
 
     return ReadRegister(SC16IS750_REG_IOSTATE);
 
 }
 
-void SC16IS750::GPIOSetPortMode(uint8_t port_io)
+void WifiData::GPIOSetPortMode(uint8_t port_io)
 {
     WriteRegister(SC16IS750_REG_IODIR, port_io);
     return;
 }
 
-void SC16IS750::GPIOSetPortState(uint8_t port_state)
+void WifiData::GPIOSetPortState(uint8_t port_state)
 {
     WriteRegister(SC16IS750_REG_IOSTATE, port_state);
     return;
 }
 
-void SC16IS750::SetPinInterrupt(uint8_t io_int_ena)
+void WifiData::SetPinInterrupt(uint8_t io_int_ena)
 {
     WriteRegister(SC16IS750_REG_IOINTENA, io_int_ena);
     return;
 }
 
-void SC16IS750::ResetDevice(void)
+void WifiData::ResetDevice(void)
 {
     uint8_t reg;
 
@@ -272,7 +275,7 @@ void SC16IS750::ResetDevice(void)
     return;
 }
 
-void SC16IS750::ModemPin(uint8_t gpio) //gpio == 0, gpio[7:4] are modem pins, gpio == 1 gpio[7:4] are gpios
+void WifiData::ModemPin(uint8_t gpio) //gpio == 0, gpio[7:4] are modem pins, gpio == 1 gpio[7:4] are gpios
 {
     uint8_t temp_iocontrol;
 
@@ -287,7 +290,7 @@ void SC16IS750::ModemPin(uint8_t gpio) //gpio == 0, gpio[7:4] are modem pins, gp
     return;
 }
 
-void SC16IS750::GPIOLatch(uint8_t latch)
+void WifiData::GPIOLatch(uint8_t latch)
 {
     uint8_t temp_iocontrol;
 
@@ -302,17 +305,17 @@ void SC16IS750::GPIOLatch(uint8_t latch)
     return;
 }
 
-void SC16IS750::InterruptControl(uint8_t int_ena)
+void WifiData::InterruptControl(uint8_t int_ena)
 {
     WriteRegister(SC16IS750_REG_IER, int_ena);
 }
 
-uint8_t SC16IS750::InterruptPendingTest(void)
+uint8_t WifiData::InterruptPendingTest(void)
 {
     return (ReadRegister(SC16IS750_REG_IIR) & 0x01);
 }
 
-void SC16IS750::__isr(void)
+void WifiData::__isr(void)
 {
     uint8_t irq_src;
 
@@ -343,7 +346,7 @@ void SC16IS750::__isr(void)
     return;
 }
 
-void SC16IS750::FIFOEnable(uint8_t fifo_enable)
+void WifiData::FIFOEnable(uint8_t fifo_enable)
 {
     uint8_t temp_fcr;
 
@@ -359,7 +362,7 @@ void SC16IS750::FIFOEnable(uint8_t fifo_enable)
     return;
 }
 
-void SC16IS750::FIFOReset(uint8_t rx_fifo)
+void WifiData::FIFOReset(uint8_t rx_fifo)
 {
      uint8_t temp_fcr;
 
@@ -376,7 +379,7 @@ void SC16IS750::FIFOReset(uint8_t rx_fifo)
 
 }
 
-void SC16IS750::FIFOSetTriggerLevel(uint8_t rx_fifo, uint8_t length)
+void WifiData::FIFOSetTriggerLevel(uint8_t rx_fifo, uint8_t length)
 {
     uint8_t temp_reg;
 
@@ -396,19 +399,19 @@ void SC16IS750::FIFOSetTriggerLevel(uint8_t rx_fifo, uint8_t length)
     return;
 }
 
-uint8_t SC16IS750::FIFOAvailableData(void)
+uint8_t WifiData::FIFOAvailableData(void)
 {
    return ReadRegister(SC16IS750_REG_RXLVL);
 
 }
 
-uint8_t SC16IS750::FIFOAvailableSpace(void)
+uint8_t WifiData::FIFOAvailableSpace(void)
 {
    return ReadRegister(SC16IS750_REG_TXLVL);
 
 }
 
-void SC16IS750::WriteByte(uint8_t val)
+void WifiData::WriteByte(uint8_t val)
 {
     uint8_t tmp_lsr;
     do {
@@ -419,7 +422,7 @@ void SC16IS750::WriteByte(uint8_t val)
 
 }
 
-int SC16IS750::ReadByte(void)
+int WifiData::ReadByte(void)
 {
     volatile uint8_t val;
     if (FIFOAvailableData() == 0) {
@@ -434,7 +437,7 @@ int SC16IS750::ReadByte(void)
 
 }
 
-void SC16IS750::EnableTransmit(uint8_t tx_enable)
+void WifiData::EnableTransmit(uint8_t tx_enable)
 {
     uint8_t temp_efcr;
     temp_efcr = ReadRegister(SC16IS750_REG_EFCR);
@@ -448,7 +451,7 @@ void SC16IS750::EnableTransmit(uint8_t tx_enable)
     return;
 }
 
-uint8_t SC16IS750::ping()
+uint8_t WifiData::ping()
 {
     WriteRegister(SC16IS750_REG_SPR,0x55);
     if (ReadRegister(SC16IS750_REG_SPR) !=0x55) {
@@ -464,7 +467,7 @@ uint8_t SC16IS750::ping()
 
 }
 
-void SC16IS750::flush()
+void WifiData::flush()
 {
     uint8_t tmp_lsr;
 
@@ -475,7 +478,7 @@ void SC16IS750::flush()
 
 }
 
-int SC16IS750:: peek()
+int WifiData::peek()
 {
     if ( peek_flag == 0 ) {
         peek_buf =ReadByte();

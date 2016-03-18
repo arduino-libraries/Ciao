@@ -18,39 +18,32 @@ Replace the APIKEY_TALKBACK and ID_TALKBACK values with the values reported in t
 #define APIKEY_TALKBACK     "XXXXXXXXXXXXXX"
 #define ID_TALKBACK         "XXXX"
 
+String cmd = "D13_ON";
 
 void setup() {
-  Wifi.begin(); // INIT WIFI
-  Wifi.connect("SSID","PASSWORD"); // CONNECT TO HOME AP (essid,pwd)
 
   Ciao.begin(); // CIAO INIT
 }
 
-String cmd = "D13_ON";
-
 void loop() {
-  
-  if(Wifi.connected()){
       
-      String stringoneL = "/talkbacks/";
-    	stringoneL += ID_TALKBACK;
-    	stringoneL += "/commands?api_key=";
-    	stringoneL += APIKEY_TALKBACK;
-    	stringoneL += "&command_string=";
-    	stringoneL += cmd;
+      String uri = "/talkbacks/";
+    	uri += ID_TALKBACK;
+    	uri += "/commands?api_key=";
+    	uri += APIKEY_TALKBACK;
+    	uri += "&command_string=";
+    	uri += cmd;
 
-      Wifi.println("Write cmd on TalkBack Queue"); 
-      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, stringoneL,"POST");
+      Ciao.println("Write cmd on TalkBack Queue"); 
+      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, uri,"POST");
   
-      if ( atoi( data.get(1) ) > 0 ){
-          Wifi.println( "State: " + String (data.get(1)) );
-          Wifi.println( "Response: " + String (data.get(2)) );
+      if (!data.isEmpty()){
+          Ciao.println( "State: " + String (data.get(1)) );
+          Ciao.println( "Response: " + String (data.get(2)) );
         }
         else{ 
-          Wifi.println ("Write Error");
+          Ciao.println ("Write Error");
         }
-     
-  }
  
   delay(30000); // Thinkspeak policy
 

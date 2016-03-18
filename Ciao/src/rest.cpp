@@ -4,7 +4,6 @@
  * \author
  *       Tuan PM <tuanpm@live.com>
  */
-
 #include "rest.h"
 REST::REST(ESP *e)
 {
