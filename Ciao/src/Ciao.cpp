@@ -3,8 +3,8 @@
 * Copyright (c) 2015 Arduino srl. All right reserved.
 *
 * File : Ciao.cpp
-* Date : 2015/09/17
-* Revision : 0.0.1 $
+* Date : 2016/02/16
+* Revision : 0.0.2 $
 * Author: andrea[at]arduino[dot]org
 *
 ****************************************************************************
@@ -25,17 +25,25 @@
 
 #include "Ciao.h"
 
+#if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
+
+#if defined(__AVR_ATmega32U4__)
 CiaoClass::CiaoClass(Stream &_stream) :
-  stream(_stream), started(false) {
+	stream(_stream), started(false) {
   // Empty
 }
+#elif defined(ARDUINO_ARCH_SAMD)
+CiaoClass::CiaoClass(Serial_ stream){
+  // Empty
+}
+#endif
 
 void CiaoClass::begin() {
 	
 	String start;
 	String stop;
 
-  // Wait for U-boot to finish startup
+  	// Wait for U-boot to finish startup
 	do {
 		dropAll();
 		delay(1000);
@@ -44,31 +52,45 @@ void CiaoClass::begin() {
 	stream.println("ciao;r;status");					//check the bridge python status	
 	String status = stream.readStringUntil(END_TX_CHAR);
 	if(status == "1;running"){						
-		do{												//kill a istance of the bridge.py
-			stream.println("ciao;w;quit");
-			stop = stream.readStringUntil(END_TX_CHAR);
-			delay(3000);
-		}while(stop != "1;done");
+	 	do{												//kill a istance of the bridge.py
+	 		stream.println("ciao;w;quit");
+	 		stop = stream.readStringUntil(END_TX_CHAR);
+	 		delay(3000);
+	 	}while(stop != "1;done");
     }
 	do{ 
+		#if defined(__AVR_ATmega32U4__)
 		stream.print(F("run-ciao\n"));				//start bridge python
 		stream.readStringUntil(END_TX_CHAR);
+		#endif
 		delay(3000);
 		stream.println("ciao;r;status");				//check if bridge python is running
 		start = stream.readStringUntil(END_TX_CHAR);
 	}while (start != "1;running");
 }
 
-CiaoData CiaoClass::read( String connector) {
+CiaoData CiaoClass::read( String connector, String param1, String param2 , String param3 ) {
 	
 	CiaoData data;
-	stream.println(connector + ";r");					// send read request 
+	stream.print(connector + ";r");					// send read request 
+	if (param1 != ""){
+		stream.print(";"+param1);
+	}
+	if (param2 != ""){
+		stream.print(DATA_SPLIT_CHAR);
+		stream.print(param2);
+	}
+	if (param3 != ""){
+		stream.print(DATA_SPLIT_CHAR);
+		stream.print(param3);
+	}
+	stream.println();
 	String message = stream.readStringUntil(END_TX_CHAR);
 	data = parse(message, ";");
 	return data;
 }
 
-void CiaoClass::write(String connector, String param1, String param2 , String param3 ) {
+CiaoData CiaoClass::write( String connector, String param1, String param2 , String param3 ) {
 
 	CiaoData data;
 	if (param1 != ""){
@@ -86,10 +108,11 @@ void CiaoClass::write(String connector, String param1, String param2 , String pa
 	stream.println();
 	String mess_receive = stream.readStringUntil(END_TX_CHAR);
 	data = parse(mess_receive, ";");
+	return data;
 	
 }
 
-void CiaoClass::writeResponse( String connector, String id, String param1, String param2 , String param3) {
+CiaoData CiaoClass::writeResponse( String connector, String id, String param1, String param2 , String param3) {
 
 	CiaoData data;
 	if(id.length()> ID_SIZE_TX){
@@ -110,6 +133,7 @@ void CiaoClass::writeResponse( String connector, String id, String param1, Strin
 		String mess_receive = stream.readStringUntil(END_TX_CHAR);
 		data = parse(mess_receive, ";");
 	}
+	return data;
 }
 
 CiaoData CiaoClass::parse(String message, String split){
@@ -155,9 +179,12 @@ void splitString(String command, String split, String msg[], int size){
 }
 
 // Ciao instance
-#ifdef __AVR_ATmega32U4__
-// Leonardo variants (where HardwareSerial is Serial1)
+#ifdef __AVR_ATmega32U4__ 
+// Yun variants (where HardwareSerial is Serial1)
 SerialCiaoClass Ciao(Serial1);
-#else
-SerialCiaoClass Ciao(Serial);
+#elif defined ARDUINO_ARCH_SAMD
+// Tian variants (where Serial_ is SerialUSB)
+SerialCiaoClass Ciao(SerialUSB);
+#endif
+
 #endif
