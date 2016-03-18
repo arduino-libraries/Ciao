@@ -102,13 +102,13 @@ Please keep the above information when you use this code in your project.
 //#define     SC16IS750_CRYSTCAL_FREQ (16000000UL)    
 //#define     SC16IS750_DEBUG_PRINT   (0)
 #define     SC16IS750_PROTOCOL_I2C  (0)
+#define     SC16IS750_PROTOCOL_I2C  (0)
+#define     END     "<!--~-->"
 
-
-
-class SC16IS750 : public Stream
+class WifiData : public Stream
 { 
     public:
-        SC16IS750(uint8_t prtcl = SC16IS750_PROTOCOL_I2C, uint8_t addr = SC16IS750_ADDRESS_AD);
+        WifiData(uint8_t prtcl = SC16IS750_PROTOCOL_I2C, uint8_t addr = SC16IS750_ADDRESS_AD);
         void begin(uint32_t baud);                               
         int read();
         size_t write(uint8_t val);

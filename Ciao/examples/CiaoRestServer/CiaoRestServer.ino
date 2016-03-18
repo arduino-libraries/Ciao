@@ -8,10 +8,10 @@
  * "digital/PIN/VALUE"  -> to write a digital PIN (VALUE: 1/0)
  * "analog/PIN/VALUE"   -> to write in a PWM PIN(VALUE range: 0 - 255);
  * "analog/PIN"         -> to read a analog PIN
- * "servo/PIN/VALUE"	-> to write angle in a SERVO PIN(VALUE range: 0 - 180);
+ * "servo/PIN/VALUE"	  -> to write angle in a SERVO PIN(VALUE range: 0 - 180);
  * "mode/PIN/VALUE"     -> to set the PIN mode (VALUE: input / output)
- * "led on"             -> turn on led 13
- * "led off"            -> turn off led 13
+ * "ledon"              -> turn on led 13
+ * "ledoff"             -> turn off led 13
  * "ciao"               -> random answers in 5 different languages
  
  NOTE: be sure to activate and configure xmpp connector on Linino OS
@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
 
-  CiaoData data = Ciao.read("xmpp");   
+  CiaoData data = Ciao.read("restserver");   
   if(!data.isEmpty()){  
     String id = data.get(0);
     String sender = data.get(1);
@@ -42,21 +42,11 @@ void loop() {
     
     message.toUpperCase();
     
-    if(message == "LED ON"){
-      digitalWrite(13,HIGH);
-      Ciao.writeResponse("xmpp",id,"Led D13 ON");
-    }
-    
-    else if(message == "LED OFF"){
-      digitalWrite(13,LOW);
-      Ciao.writeResponse("xmpp",id,"Led D13 OFF");     
-    }       
-    else{
-      String command[3];
+    String command[3];
           
-      splitString(message,"/",command,3);
-      execute(command,id);
-    }
+    splitString(message,"/",command,3);
+    execute(command,id);
+
   }
 }
 
@@ -75,7 +65,7 @@ void execute(String cmd[], String id) {
     setMode(cmd,id);
   }
   else
-    Ciao.writeResponse("xmpp",id,"sorry, i don't understand :(");
+    Ciao.writeResponse("restserver",id,"sorry, i don't understand :(");
 }
 
 void servoCommand(String cmd[], String id){
@@ -88,13 +78,13 @@ void servoCommand(String cmd[], String id){
     if(value <= 180 && value >=0){
       servo.attach(pin);
       servo.write(value);
-      Ciao.writeResponse("xmpp",id,"Servo D"+String(pin)+" set to "+String(value)+" degrees");
+      Ciao.writeResponse("restserver",id,"Servo D"+String(pin)+" set to "+String(value)+" degrees");
     }
     else
-      Ciao.writeResponse("xmpp",id,"Invalid angle value");
+      Ciao.writeResponse("restserver",id,"Invalid angle value");
   }
   else
-    Ciao.writeResponse("xmpp",id,"Invalid command");  
+    Ciao.writeResponse("restserver",id,"Invalid command");  
 }
 
 void digitalCommand(String cmd[], String id) {
@@ -106,13 +96,13 @@ void digitalCommand(String cmd[], String id) {
     value = (cmd[2]).toInt();
     digitalWrite(pin, value);
     if (value == 1)
-      Ciao.writeResponse("xmpp",id,"Pin D"+String(pin)+" ON");
+      Ciao.writeResponse("restserver",id,"Pin D"+String(pin)+" ON");
     else if(value == 0)
-      Ciao.writeResponse("xmpp",id,"Pin D"+String(pin)+" OFF");   
+      Ciao.writeResponse("restserver",id,"Pin D"+String(pin)+" OFF");   
   }
   else if (cmd[2] == "-1") {
     value = digitalRead(pin);
-    Ciao.writeResponse("xmpp",id,"D"+String(pin)+" value = "+String(value));
+    Ciao.writeResponse("restserver",id,"D"+String(pin)+" value = "+String(value));
   }
 }
 
@@ -124,11 +114,11 @@ void analogCommand(String cmd[], String id) {
   if (cmd[2] != "-1") {
     value =(cmd[2]).toInt();
     analogWrite(pin, value);
-    Ciao.writeResponse("xmpp",id,"D"+String(pin)+" set to analog");
+    Ciao.writeResponse("restserver",id,"D"+String(pin)+" set to analog");
   }
   else if (cmd[2] == "-1") {
     value = analogRead(pin);
-    Ciao.writeResponse("xmpp",id,"A"+String(pin)+" value = "+String(value));
+    Ciao.writeResponse("restserver",id,"A"+String(pin)+" value = "+String(value));
   }
 }
 
@@ -139,14 +129,14 @@ void setMode(String cmd[], String id) {
   
   if (cmd[2] == "INPUT") {
     pinMode(pin, INPUT);
-    Ciao.writeResponse("xmpp",id," pin D"+String(pin)+" set in INPUT mode");
+    Ciao.writeResponse("restserver",id," pin D"+String(pin)+" set in INPUT mode");
     return;
   }
 
   if (cmd[2] == "OUTPUT") {
     pinMode(pin, OUTPUT);
-    Ciao.writeResponse("xmpp",id," pin D"+String(pin)+" set in OUTPUT mode");
+    Ciao.writeResponse("restserver",id," pin D"+String(pin)+" set in OUTPUT mode");
     return;
   }
-  Ciao.writeResponse("xmpp",id,"invalid mode");
+  Ciao.writeResponse("restserver",id,"invalid mode");
 }

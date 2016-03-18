@@ -20,8 +20,6 @@ Replace the APIKEY_TALKBACK and ID_TALKBACK values with the values reported in t
 
 
 void setup() {
-  Wifi.begin(); // INIT WIFI
-  Wifi.connect("SSID","PWD"); 
 
   Ciao.begin(); // CIAO INIT
 
@@ -29,28 +27,25 @@ void setup() {
 
 void loop() {
   
-  if(Wifi.connected()){
 
-      String StringForRequest = "/talkbacks/";  
-          StringForRequest +=  ID_TALKBACK;
-          StringForRequest +=  "/commands/execute?api_key=";
-          StringForRequest +=  APIKEY_TALKBACK;
+      String request = "/talkbacks/";  
+          request +=  ID_TALKBACK;
+          request +=  "/commands/execute?api_key=";
+          request +=  APIKEY_TALKBACK;
     
-      Wifi.println("Read cmd from TalkBack Queue"); 
-      CiaoData data = Ciao.read(CONNECTOR, SERVER_ADDR, StringForRequest);
+      Ciao.println("Read cmd from TalkBack Queue"); 
+      CiaoData data = Ciao.read(CONNECTOR, SERVER_ADDR, request);
  
       String state = data.get(1);
       String response = data.get(2);
       
-      if ( atoi( data.get(1) ) > 0 ){
-          Wifi.println( "State: " + String (data.get(1)) );
-          Wifi.println( "Response: " + String (data.get(2)) );
+      if (!data.isEmpty()){
+          Ciao.println( "State: " + String (data.get(1)) );
+          Ciao.println( "Response: " + String (data.get(2)) );
         }
         else{ 
-          Wifi.println ("Read Error OR EmptyQueue");
+          Ciao.println ("Read Error OR EmptyQueue");
         }
-  
-  }
  
   delay(30000); // Thinkspeak policy
 

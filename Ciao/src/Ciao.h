@@ -53,6 +53,7 @@ class CiaoClass {
 		CiaoData write( String protocol, String param1, String param2 = "", String param3 = "");
 		CiaoData writeResponse( String protocol, String id, String param1="", String param2 = "", String param3 = "");
 		CiaoData parse( String, String);
+		void println(String log){};
 		#if defined(__AVR_ATmega32U4__) 
 		CiaoClass(Stream &_stream);
 		#elif defined(ARDUINO_ARCH_SAMD)
@@ -101,31 +102,35 @@ extern SerialCiaoClass Ciao;
 
 #else
 
+// class CiaoData {
+// 	public:
+		
+// 		char* get(int index){
+// 			return msg_split[index];
+// 		}
+  
+// 	public:
+// 		char* msg_split[3];
+		
+// };
+
 class CiaoClass {
 	public:
 		void begin();
 
-		CiaoData read( char*, char*, String );
-		CiaoData read( char*, char*, String, char*);
-		CiaoData write( char*, char*, String );
-		CiaoData write( char*, char*, String, char*);
-		
-};
+		CiaoData read( char*, char*, String );            // “rest”, ”hostname”, ”Stringone”,		
+		CiaoData read( char*, char*, String, char*);      // “rest”, ”hostname”, ”Stringone”, ”method”
 
-class WifiClass {
-	public:
-		void begin();
+		CiaoData write( char*, char*, String );            // “rest”, ”hostname”, ”Stringone”,		
+		CiaoData write( char*, char*, String, char*);      // “rest”, ”hostname”, ”Stringone”, ”method”
+		
 		void print(String str);
 		void println(String str);
-		void connect(char* strA, char* strB);
-		void powerON();
-		void powerOFF();
-		boolean connected();
+	
 };
-
-extern WifiClass Wifi;
 extern CiaoClass Ciao;
 
 #endif
+
 
 #endif /* CIAO_H_ */

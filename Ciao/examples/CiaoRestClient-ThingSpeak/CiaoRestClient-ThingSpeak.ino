@@ -16,39 +16,34 @@ After that, replace the "XXXXXXXXX" value of APIKEY_THINGSPEAK with "Write API k
 
 #define APIKEY_THINGSPEAK  "XXXXXXXXXXXXX"
 
+short hum = 60;
+short temp = 22;
+
 void setup() {
-  Wifi.begin(); // INIT WIFI
-  Wifi.connect("SSID","PASSWORD"); // CONNECT TO HOME AP (essid,pwd)
 
   Ciao.begin(); // CIAO INIT
 }
 
-short hum = 60;
-short temp = 22;
-
 void loop() {
-  
-  if(Wifi.connected()){
-    
-    String stringoneW = "/update?api_key=";
-    stringoneW += APIKEY_THINGSPEAK;
-    stringoneW += "&field1=";
-    stringoneW += String(hum);
-    stringoneW += "&field2=";
-    stringoneW += String(temp);
-
-    Wifi.println("Send data on ThingSpeak Channel"); 
       
-    CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, stringoneW);
+    String uri = "/update?api_key=";
+    uri += APIKEY_THINGSPEAK;
+    uri += "&field1=";
+    uri += String(hum);
+    uri += "&field2=";
+    uri += String(temp);
 
-    if ( atoi( data.get(1) ) > 0 ){
-      Wifi.println( "State: " + String (data.get(1)) );
-      Wifi.println( "Response: " + String (data.get(2)) );
+    Ciao.println("Send data on ThingSpeak Channel"); 
+      
+    CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, uri);
+
+    if (!data.isEmpty()){
+      Ciao.println( "State: " + String (data.get(1)) );
+      Ciao.println( "Response: " + String (data.get(2)) );
     }
     else{ 
-      Wifi.println ("Write Error");
+      Ciao.println("Write Error");
     }    
-  }
  
   delay(30000); // Thinkspeak policy
 

@@ -73,6 +73,13 @@ class CiaoData {
 		char* get(int index){
 			return msg_split[index];
 		}
+
+		bool isEmpty(){	
+			if (atoi( get(1) ) > 0)
+				return false;
+			else
+				return true;	
+		}
 		
 	public:
 		char* msg_split[3];
