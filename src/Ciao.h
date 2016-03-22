@@ -29,11 +29,11 @@
 #define CIAO_H_
 
 #include <Arduino.h>
-#include <CiaoData.h>
+#include "lib/CiaoData.h"
 #if defined(__AVR_ATmega328P__)
-#include <rest.h>
-#include <SC16IS750.h>
-#include <espduino.h>
+#include "lib/rest.h"
+#include "lib/SC16IS750.h"
+#include "lib/espduino.h"
 #else
 #include <Stream.h>
 #endif
