@@ -4,19 +4,19 @@
 #include <Arduino.h>
 
 #include <Stream.h>
-#include <crc16.h>
+#include "crc16.h"
 //#include <mqtt.h>
-#include <rest.h>
-#include <espduino.h>
-#include <ringbuf.h>
-#include <FP.h>
+#include "rest.h"
+#include "espduino.h"
+#include "ringbuf.h"
+#include "FP.h"
 #include <string.h>
 
 #ifdef __AVR_ATmega328P__
 
 //#else
 
-#include <SC16IS750.h> 
+#include "SC16IS750.h"
 
 class WifiClass {
 

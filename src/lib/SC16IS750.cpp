@@ -21,7 +21,7 @@ Please keep the above information when you use this code in your project.
 
 #if defined(__AVR_ATmega328P__)
 
-#include <SC16IS750.h>
+#include "SC16IS750.h"
 #include <Wire.h>
 
 #define WIRE Wire
