@@ -30,13 +30,7 @@
 
 #include <Arduino.h>
 #include "lib/CiaoData.h"
-#if defined(__AVR_ATmega328P__)
-#include "lib/rest.h"
-#include "lib/SC16IS750.h"
-#include "lib/espduino.h"
-#else
 #include <Stream.h>
-#endif
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
 
@@ -101,18 +95,6 @@ void splitString(String, String, String[], int size);
 extern SerialCiaoClass Ciao;
 
 #else
-
-// class CiaoData {
-// 	public:
-		
-// 		char* get(int index){
-// 			return msg_split[index];
-// 		}
-  
-// 	public:
-// 		char* msg_split[3];
-		
-// };
 
 class CiaoClass {
 	public:

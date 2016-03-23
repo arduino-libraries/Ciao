@@ -23,11 +23,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#include "Ciao.h"
-#include "Wifi.h"
-
 #if defined(__AVR_ATmega328P__)
-
+  
+#include <Ciao.h>
+#include <ArduinoWiFi.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -36,7 +35,7 @@ ESP esp(&espSerial, 4);
 REST rest(&esp);
 
 CiaoClass Ciao;
-WifiClass Wifi;
+//WifiClass Wifi;
 
 boolean wifiConnected = false;
 
@@ -57,23 +56,23 @@ void wifiCb(void* response)
 	}
 }
 
-void WifiClass::powerON(){ 	
+void ArduinoWifiClass::powerON(){ 	
 	
 }
-void WifiClass::powerOFF(){ 	
+void ArduinoWifiClass::powerOFF(){ 	
 	
 }
 
-WifiData WifiClass::stream(){
+WifiData ArduinoWifiClass::stream(){
 	return espSerial;
 }
-int WifiClass::read(){
+int ArduinoWifiClass::read(){
 	return espSerial.read();
 }
-void WifiClass::print(String str){
+void ArduinoWifiClass::print(String str){
 	espSerial.print(str);
 }
-void WifiClass::println(String str){
+void ArduinoWifiClass::println(String str){
 	espSerial.println(str);
 }
 void CiaoClass::print(String str){
@@ -82,13 +81,13 @@ void CiaoClass::print(String str){
 void CiaoClass::println(String str){
 	espSerial.println(str);
 }
-boolean WifiClass::available(){
+boolean ArduinoWifiClass::available(){
 	return espSerial.available();
 }
-void WifiClass::connect(char* ssid,char* pwd){
+void ArduinoWifiClass::connect(char* ssid,char* pwd){
 	esp.wifiConnect(ssid, pwd);
 }
-boolean WifiClass::connected(){
+boolean ArduinoWifiClass::connected(){
 	return wifiConnected;
 }
 
@@ -111,7 +110,7 @@ void WifiBegin() {
 	esp.wifiCb.attach(&wifiCb);
 	espSerial.println("\nDBG: UnoWiFi Start");
 }
-void WifiClass::begin() {
+void ArduinoWifiClass::begin() {
 	WifiBegin();
 }
 void CiaoClass::begin() {
