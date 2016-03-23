@@ -1,8 +1,9 @@
 #include <Wire.h>
+#include <ArduinoWiFi.h>
 #include <Ciao.h>
 
 #define CONNECTOR     "rest" 
-#define SERVER_ADDR   "192.168.0.100" // change ip address with your server ip address
+#define SERVER_ADDR   "192.168.1.1" // change ip address with your server ip address
 
 int buttonState = LOW; //this variable tracks the state of the button, low if not pressed, high if pressed
 int ledState = -1; //this variable tracks the state of the LED, negative if off, positive if on
@@ -26,13 +27,13 @@ void loop() {
     //if the button has been pressed, lets toggle the LED from "off to on" or "on to off"
     if ( (buttonState == HIGH) && (ledState < 0) ) {
  
-      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, "/arduino/digital/12/1"); //turn LED on
+      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, "/arduino/digital/13/1"); //turn LED on
       ledState = -ledState; //now the LED is on, we need to change the state
       lastDebounceTime = millis(); //set the current time
     }
     else if ( (buttonState == HIGH) && (ledState > 0) ) {
- 
-      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, "/arduino/digital/12/0"); //turn LED off
+      
+      CiaoData data = Ciao.write(CONNECTOR, SERVER_ADDR, "/arduino/digital/13/0"); //turn LED off
       ledState = -ledState; //now the LED is off, we need to change the state
       lastDebounceTime = millis(); //set the current time
         
@@ -45,7 +46,7 @@ void loop() {
       }
               
     }
- 
   }
+
  
 }
