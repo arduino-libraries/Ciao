@@ -23,9 +23,11 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-#include "Ciao.h"
+
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
+
+#include "Ciao.h"
 
 #if defined(__AVR_ATmega32U4__)
 CiaoClass::CiaoClass(Stream &_stream) :

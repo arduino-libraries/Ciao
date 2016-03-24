@@ -1,5 +1,4 @@
 #include <Wire.h>
-#include <ArduinoWiFi.h>
 #include <Ciao.h>
 
 #define CONNECTOR     "rest" 

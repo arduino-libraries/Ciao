@@ -29,8 +29,11 @@
 #define CIAO_H_
 
 #include <Arduino.h>
-#include "lib/CiaoData.h"
 #include <Stream.h>
+#include "lib/CiaoData.h"
+#if defined(__AVR_ATmega328P__)
+#include "lib/SC16IS750.h"
+#endif
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
 
@@ -96,7 +99,23 @@ extern SerialCiaoClass Ciao;
 
 #else
 
-class CiaoClass {
+class ArduinoWifiClass : public WifiData
+{
+
+	public:
+		void begin();		
+
+		boolean connected();
+		void connect(char* , char*);
+
+		void powerON();
+		void powerOFF();
+
+
+};
+
+class CiaoClass : public WifiData
+{
 	public:
 		void begin();
 
@@ -105,12 +124,12 @@ class CiaoClass {
 
 		CiaoData write( char*, char*, String );            // “rest”, ”hostname”, ”Stringone”,		
 		CiaoData write( char*, char*, String, char*);      // “rest”, ”hostname”, ”Stringone”, ”method”
-		
-		void print(String str);
-		void println(String str);
 	
 };
+
+
 extern CiaoClass Ciao;
+extern ArduinoWifiClass Wifi;
 
 #endif
 
