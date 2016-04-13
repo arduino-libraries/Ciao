@@ -24,21 +24,14 @@
 */
 
 
-
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
 
 #include "Ciao.h"
 
-#if defined(__AVR_ATmega32U4__)
 CiaoClass::CiaoClass(Stream &_stream) :
 	stream(_stream), started(false) {
   // Empty
 }
-#elif defined(ARDUINO_ARCH_SAMD)
-CiaoClass::CiaoClass(Serial_ stream){
-  // Empty
-}
-#endif
 
 void CiaoClass::begin() {
 	
@@ -61,10 +54,8 @@ void CiaoClass::begin() {
 	 	}while(stop != "1;done");
     }
 	do{ 
-		#if defined(__AVR_ATmega32U4__)
 		stream.print(F("run-ciao\n"));				//start bridge python
 		stream.readStringUntil(END_TX_CHAR);
-		#endif
 		delay(3000);
 		stream.println("ciao;r;status");				//check if bridge python is running
 		start = stream.readStringUntil(END_TX_CHAR);

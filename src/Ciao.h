@@ -40,7 +40,7 @@
 #if defined(__AVR_ATmega32U4__)
 #define BAUDRATE 250000
 #elif defined(ARDUINO_ARCH_SAMD)
-#define BAUDRATE 115200
+#define BAUDRATE 4000000
 #endif
 
 class CiaoClass {
@@ -51,20 +51,12 @@ class CiaoClass {
 		CiaoData writeResponse( String protocol, String id, String param1="", String param2 = "", String param3 = "");
 		CiaoData parse( String, String);
 		void println(String log){};
-		#if defined(__AVR_ATmega32U4__) 
 		CiaoClass(Stream &_stream);
-		#elif defined(ARDUINO_ARCH_SAMD)
-		CiaoClass(Serial_ stream);
-		#endif
 
 	private:
 		void dropAll();
 		bool started;
-		#if defined(__AVR_ATmega32U4__)
 		Stream &stream;
-		#elif defined(ARDUINO_ARCH_SAMD)
-		Serial_ stream;
-		#endif
 };
 
 // This subclass uses a serial port Stream
@@ -76,9 +68,9 @@ class SerialCiaoClass : public CiaoClass {
 			// Empty
 		}
 		#elif defined(ARDUINO_ARCH_SAMD)
-		SerialCiaoClass(Serial_ serial)
-			: CiaoClass(serial){
-			// Empty	
+		SerialCiaoClass(Serial_ &_serial)
+			: CiaoClass(_serial), serial(_serial) {
+			// Empty
 		}
 		#endif
 		void begin( unsigned long baudrate = BAUDRATE) {
@@ -89,7 +81,7 @@ class SerialCiaoClass : public CiaoClass {
 		#if defined(__AVR_ATmega32U4__)
 		HardwareSerial &serial;
 		#elif defined(ARDUINO_ARCH_SAMD)
-		Serial_ serial;
+		Serial_ &serial;
 		#endif
 };
 
