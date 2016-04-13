@@ -54,10 +54,8 @@ void CiaoClass::begin() {
 	 	}while(stop != "1;done");
     }
 	do{ 
-		#if defined(__AVR_ATmega32U4__)
 		stream.print(F("run-ciao\n"));				//start bridge python
 		stream.readStringUntil(END_TX_CHAR);
-		#endif
 		delay(3000);
 		stream.println("ciao;r;status");				//check if bridge python is running
 		start = stream.readStringUntil(END_TX_CHAR);
