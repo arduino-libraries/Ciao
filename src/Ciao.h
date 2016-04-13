@@ -81,7 +81,7 @@ class SerialCiaoClass : public CiaoClass {
 		#if defined(__AVR_ATmega32U4__)
 		HardwareSerial &serial;
 		#elif defined(ARDUINO_ARCH_SAMD)
-		Serial_ serial;
+		Serial_ &serial;
 		#endif
 };
 
