@@ -34,6 +34,10 @@
 #define ID_SIZE_TX		25
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
+
+#define NL				String((char)29)
+#define CR				String((char)31)
+
 class CiaoData {
 	public:
 		
