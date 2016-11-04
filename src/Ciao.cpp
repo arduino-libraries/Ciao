@@ -23,9 +23,6 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-
-#if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
-
 #include "Ciao.h"
 
 CiaoClass::CiaoClass(Stream &_stream) :
@@ -154,7 +151,7 @@ void CiaoClass::dropAll() {
 }
 
 //fuction to split command (ex: digital/13/1)
-void splitString(String command, String split, String msg[], int size){		
+void CiaoClass::splitString(String command, String split, String msg[], int size){		
 	  
 	for(int a=0;a< size ;a++)		//initialize array element to -1
 		msg[a]= ID_ERROR;
@@ -172,12 +169,4 @@ void splitString(String command, String split, String msg[], int size){
 }
 
 // Ciao instance
-#ifdef __AVR_ATmega32U4__ 
-// Yun variants (where HardwareSerial is Serial1)
-SerialCiaoClass Ciao(Serial1);
-#elif defined ARDUINO_ARCH_SAMD
-// Tian variants (where Serial_ is SerialUSB)
-SerialCiaoClass Ciao(SerialUSB);
-#endif
-
-#endif
+SerialCiaoClass Ciao(SERIAL_PORT_IN_USE);
