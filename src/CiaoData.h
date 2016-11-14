@@ -33,6 +33,9 @@
 #define DATA_SPLIT_CHAR	(char)30
 #define ID_SIZE_TX		25
 
+#define NL				String((char)29)
+#define CR				String((char)31)
+
 class CiaoData {
 	public:
 
@@ -50,14 +53,14 @@ class CiaoData {
 			if(get(0) == ID_ERROR)
 				return true;
 			else
-				return false;			
+				return false;
 		}
 
 		bool isEmpty(){		//check if data received is empty
 			if(get(0) == ID_EMPTY)
 				return true;
 			else
-				return false;	
+				return false;
 		}
 
 	public:
