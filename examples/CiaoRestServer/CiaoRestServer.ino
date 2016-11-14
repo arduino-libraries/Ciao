@@ -42,14 +42,13 @@ void loop() {
   CiaoData data = Ciao.read("restserver");
   if(!data.isEmpty()){
     String id = data.get(0);
-    String sender = data.get(1);
-    String message = data.get(2);
+    String request = data.get(2);
 
-    message.toUpperCase();
+    request.toUpperCase();
 
     String command[3];
 
-    splitString(message,"/",command,3);
+    splitString(request,"/",command,3);
     execute(command,id);
 
   }
