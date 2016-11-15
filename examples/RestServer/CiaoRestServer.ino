@@ -20,7 +20,7 @@
 
 
  NOTE: be sure to activate and configure restserver connector on Linino OS
-  http://labs.arduino.org/Ciao
+  http://www.arduino.org/learning/reference/ciao-library
 
  created September 2015
  by andrea[at]arduino[dot]org
@@ -48,7 +48,7 @@ void loop() {
 
     String command[3];
 
-    splitString(request,"/",command,3);
+    Ciao.splitString(request,"/",command,3);
     execute(command,id);
 
   }

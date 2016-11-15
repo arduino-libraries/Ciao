@@ -53,16 +53,14 @@ class CiaoClass {
 		CiaoData parse( String, String);
 		void println(String log){};
 		CiaoClass(Stream &_stream);
+		void splitString(String, String, String[], int size);
 
 	private:
 		void dropAll();
 		Stream &stream;
 		bool started;
 
-	protected:
-		void splitString(String, String, String[], int size);
 };
-
 
 // This subclass uses a serial port Stream
 class SerialCiaoClass : public CiaoClass {
