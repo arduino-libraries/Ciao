@@ -20,7 +20,7 @@
 
 
  NOTE: be sure to activate and configure restserver connector on Linino OS
-  http://labs.arduino.org/Ciao
+  http://www.arduino.org/learning/reference/ciao-library
 
  created September 2015
  by andrea[at]arduino[dot]org
@@ -42,14 +42,13 @@ void loop() {
   CiaoData data = Ciao.read("restserver");
   if(!data.isEmpty()){
     String id = data.get(0);
-    String sender = data.get(1);
-    String message = data.get(2);
+    String request = data.get(2);
 
-    message.toUpperCase();
+    request.toUpperCase();
 
     String command[3];
 
-    splitString(message,"/",command,3);
+    Ciao.splitString(request,"/",command,3);
     execute(command,id);
 
   }

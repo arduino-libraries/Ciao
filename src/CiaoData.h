@@ -33,57 +33,36 @@
 #define DATA_SPLIT_CHAR	(char)30
 #define ID_SIZE_TX		25
 
-#if defined(__AVR_ATmega32U4__) || defined(ARDUINO_ARCH_SAMD)
+#define NL				String((char)29)
+#define CR				String((char)31)
+
 class CiaoData {
 	public:
-		
+
 		String get(int index){
 			return msg_split[index];
 		}
-		
+
 		void parseMessage(String command){
 			int statusIndex = command.indexOf(DATA_SPLIT_CHAR);
 			msg_split[1] = command.substring(0, statusIndex);
 			msg_split[2] = command.substring(statusIndex+1);
 		}
-  
+
 		bool isError(){		//check for an error in data received
 			if(get(0) == ID_ERROR)
 				return true;
 			else
-				return false;			
+				return false;
 		}
-		
+
 		bool isEmpty(){		//check if data received is empty
 			if(get(0) == ID_EMPTY)
 				return true;
 			else
-				return false;	
+				return false;
 		}
-		
+
 	public:
 		String msg_split[3];
 };
-
-#elif defined(__AVR_ATmega328P__)
-
-class CiaoData {
-	public:
-
-		char* get(int index){
-			return msg_split[index];
-		}
-
-		bool isEmpty(){	
-			if (atoi( get(1) ) > 0)
-				return false;
-			else
-				return true;	
-		}
-		
-	public:
-		char* msg_split[3];
-};
-
-#endif
-

@@ -23,3 +23,5 @@ write KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
+NL	LITERAL1
+CR	LITERAL1
