@@ -13,7 +13,7 @@ More information about Arduino Ciao project can be found at http://labs.arduino.
 
 Arduino Ciao is made of two main parts:
  * the **Ciao Library** - usable inside *sketches*, it's written in C.
- * the [Ciao Core](http://labs.arduino.org/Ciao+CPU) - a library developed in python that runs on the CPU/MIPS side of the board.(source code available [here](https://github.com/arduino-org/Ciao+CPU))
+ * the [Ciao Core](http://labs.arduino.org/Ciao+CPU) - a library developed in python that runs on the CPU/MIPS side of the board.(source code available [here](https://github.com/arduino-org/Ciao))
 
 **Ciao Library**  allows you to send and receive data outside the microcontroller, through a serial communication, in a simple and intuitive way.
 
