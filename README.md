@@ -1,5 +1,5 @@
 # Arduino Ciao 
-Ciao Library is a lightweight library that can be used inside sketches for MCU to send and receive data, via serial communication, in a simple and intuitive way.
+Ciao Library is a lightweight library that can be used inside sketches for the MCU to send and receive data, via serial communication, in a simple and intuitive way.
 
 ## Ciao library
 
