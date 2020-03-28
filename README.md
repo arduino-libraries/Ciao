@@ -1,20 +1,24 @@
-##Arduino Ciao (MCU side)
-Simple library in C to make MCU communicate with "outside World" through Ciao Core.
+# Arduino Ciao 
+Ciao Library is a lightweight library that can be used inside sketches for the MCU to send and receive data, via serial communication, in a simple and intuitive way.
 
-###What is Arduino Ciao?
+## Ciao library
 
-**Arduino Ciao** is a easy-to-use and powerful technology that enables Arduino sketches to communicate intuitively with the "outside World". It aims to simplify interaction between microcontroller and Linino OS allowing a variety of connections with most common protocols, third-party services and social networks.
+**Arduino Ciao** is an easy-to-use and powerful technology that enables Arduino sketches to communicate intuitively with the "outside world". It aims to simplify interaction between a microcontroller and Linino OS, allowing a variety of connections with most common protocols, social networks, third-party services and applications.
 
-Arduino Ciao is open-source and distributed under MIT license: feel free to read it, suggest improvements, provide feedbacks and develop new features.
+**Arduino Ciao** - (from now-on simply "Ciao") has been designed and developed to be modular and easily configurable. Its goal is to support several Connectors capable of interacting with system resources (filesystem, console, etc...) and to communicate with the most common and useful protocols (MQTT, XMPP, HTTP, SMTP, etc..) and applications (Jabber, Twitter, Facebook, etc.).
 
-More information about Arduino Ciao project can be found at http://labs.arduino.org/Ciao
+Ciao is made of two main parts:
 
-###Arduino Ciao (MCU side) - Ciao Library
+* Ciao Library: developed in C++
+* Ciao Core: developed in Python
 
-Arduino Ciao is made of two main parts:
- * the **Ciao Library** - usable inside *sketches*, it's written in C.
- * the [Ciao Core](http://labs.arduino.org/Ciao+CPU) - a library developed in python that runs on the CPU/MIPS side of the board.(source code available [here](https://github.com/arduino-org/Ciao))
+## Ciao Core
 
-**Ciao Library**  allows you to send and receive data outside the microcontroller, through a serial communication, in a simple and intuitive way.
+To communicate with the "outside world" the Ciao Library interacts with Ciao Core: the key component of the Ciao technology on the MPU (microprocessor) side. Ciao Core runs over Linino OS, it is developed in Python and it has been designed to enable communication with the "outside world" via several modules called Connectors. Such connectors communicate with Ciao Core using JSON strings sent over a TCP socket.
 
-Details about **Ciao Library** architecture are available in the [Arduino wiki](http://labs.arduino.org/Ciao+MCU)
+Ciao Core, thanks to this smart and effective design, is able to:
+
+* interact with as many connectors as you can possibly imagine;
+* support connectors written in any programming language available on Linino OS.
+  
+For more details about the **Ciao Library** visit us at https://www.arduino.cc/en/Reference/Ciao
