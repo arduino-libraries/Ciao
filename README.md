@@ -5,7 +5,7 @@ Ciao Library is a lightweight library that can be used inside sketches for MCU t
 
 **Arduino Ciao** is an easy-to-use and powerful technology that enables Arduino sketches to communicate intuitively with the "outside world". It aims to simplify interaction between a microcontroller and Linino OS, allowing a variety of connections with most common protocols, social networks, third-party services and applications.
 
-**Arduino Ciao** - from now-on simply "Ciao" has been designed and developed to be modular and easily configurable. Its goal is to support several Connectors capable of interacting with system resources (filesystem, console, etc...) and to communicate with the most common and useful protocols (MQTT, XMPP, HTTP, SMTP, etc..) and applications (Jabber,Twitter, Facebook, etc.).
+**Arduino Ciao** - (from now-on simply "Ciao") has been designed and developed to be modular and easily configurable. Its goal is to support several Connectors capable of interacting with system resources (filesystem, console, etc...) and to communicate with the most common and useful protocols (MQTT, XMPP, HTTP, SMTP, etc..) and applications (Jabber, Twitter, Facebook, etc.).
 
 Ciao is made of two main parts:
 
