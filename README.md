@@ -9,7 +9,7 @@ Ciao Library is a lightweight library that can be used inside sketches for the M
 
 Ciao is made of two main parts:
 
-* Ciao Library: developed in C
+* Ciao Library: developed in C++
 * Ciao Core: developed in Python
 
 ## Ciao Core
